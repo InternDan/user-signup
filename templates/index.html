@@ -2,14 +2,14 @@
 
 {% block content %}
 <h1>Signup</h1><br>
-<form action="/" method="POST">
-	USERNAME <input type = "text" name = "username">{{errorUsername}}<br>
+<form action="/welcome" method="POST">
+	USERNAME <input type = "text" name = "username", placeholder = {{username}} >{{errorUsername}}<br>
 
 	PASSWORD <input type = "password" name = "password">{{errorPassword}}<br>
 
 	VERIFY PASSWORD <input type = "password" name = "verify_password">{{errorPassword}}<br>
 
-	EMAIL ADDRESS (optional) <input type = "text" name = "email">{{errorEmail}}<br>
+	EMAIL ADDRESS (optional) <input type = "text" name = "email", placeholder = {{email}} > {{errorEmail}}<br>
 
 	<input type="submit" value="Submit"/> 
 </form>

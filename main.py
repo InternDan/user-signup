@@ -4,14 +4,18 @@ import re
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
+username = ""
+email = ""
+
 def verify_email_validity(email):
     error = ""
+    email.strip()
     if len(email) > 3 and len(email) < 20 : #something there
         if len(re.findall(r"@", email)) != 1:
             error = "Email is not valid, not a single @"
         if len(re.findall(r".", email)) != 1:
-            error = "Email is not valid, not a single ."
-        if len(re.findall(r" ", email)) != 1:
+            error = "Email is not valid, not a single '.'"
+        if len(re.findall(r" ", email)) == 1 or len(re.findall(r" ", email)) > 1:
             error = "Email is not valid, has a space"
     elif len(email) == 0:
         error = ""
@@ -21,6 +25,7 @@ def verify_email_validity(email):
 
 def verify_username_validity(username):
     error = ""
+    username.strip()
     if len(username) > 3 and len(username) < 20:
         if len(re.findall(r" ",username)) > 0:
             error = "Username is not valid, has a space"
@@ -42,15 +47,17 @@ def verify_password_validity(password,verify_password):
 
     return error
 
-@app.route("/",methods=["GET","POST"])
+@app.route("/",methods=["GET"])
 def index():
     if request.method == "GET":
         errorEmail = request.args.get("errorEmail")
         errorUsername = request.args.get("errorUsername")
         errorPassword = request.args.get("errorPassword")
-        return render_template('index.html',errorEmail = errorEmail,errorPassword=errorPassword,errorUsername=errorUsername)
+        username = request.args.get("username")
+        email = request.args.get("email")
+        return render_template('index.html',errorEmail = errorEmail,errorPassword=errorPassword,errorUsername=errorUsername,email=email,username=username)
     else:
-        return render_template('index.html')
+        return render_template('index.html',email=email,username=username)
 	
 @app.route("/welcome",methods=['POST'])
 def welcome():
@@ -80,8 +87,9 @@ def welcome():
         else:
             redirectString = redirectString + "&?errorEmail=" + errorEmail
     if len(redirectString) == 1:
-        return render_template('welcome.html')
-    elif len(redirectString) > 1:
+        return render_template('welcome.html',username = username)
+    if len(redirectString) > 1:
+        redirectString = redirectString + "&username=" + username + "&email=" + email
         return redirect(redirectString)
    
 	
