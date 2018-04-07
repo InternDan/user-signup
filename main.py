@@ -13,7 +13,7 @@ def verify_email_validity(email):
     if len(email) > 3 and len(email) < 20 : #something there
         if len(re.findall(r"@", email)) != 1:
             error = "Email is not valid, not a single @"
-        if len(re.findall(r".", email)) != 1:
+        if len(re.findall(r"\.", email)) != 1:
             error = "Email is not valid, not a single '.'"
         if len(re.findall(r" ", email)) == 1 or len(re.findall(r" ", email)) > 1:
             error = "Email is not valid, has a space"
@@ -31,6 +31,8 @@ def verify_username_validity(username):
             error = "Username is not valid, has a space"
     elif len(username)==0:
         error = "Username not entered!"
+    else:
+        error = "Username is not valid, must be between 3 and 20 characters"
 
     return error
 
@@ -55,8 +57,22 @@ def index():
         errorPassword = request.args.get("errorPassword")
         username = request.args.get("username")
         email = request.args.get("email")
+        if errorEmail == None:
+            errorEmail = ""
+        if errorPassword == None:
+            errorPassword = ""
+        if errorUsername == None:
+            errorUsername = ""
+        if email == None:
+            email = ""
+        if username == None:
+            username = ""
         return render_template('index.html',errorEmail = errorEmail,errorPassword=errorPassword,errorUsername=errorUsername,email=email,username=username)
     else:
+        if email == None:
+            email = ""
+        if username == None:
+            username = ""
         return render_template('index.html',email=email,username=username)
 	
 @app.route("/welcome",methods=['POST'])
